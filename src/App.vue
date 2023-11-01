@@ -3,11 +3,21 @@ import { ref } from "vue";
 const showModal = ref(false);
 const newNote = ref("");
 const notes = ref([]);
+const errorMessage = ref(null);
+const options = ref({
+  weekday: "long",
+  year: "numeric",
+  month: "long",
+  day: "numeric",
+});
 function getRandomColor() {
   const color = "hsl(" + Math.random() * 360 + ", 100%, 75%)";
   return color;
 }
 const addNotes = () => {
+  if (newNote.value.trim().length < 10) {
+    return (errorMessage.value = "Note needs to be 10 characters or more");
+  }
   notes.value.push({
     text: newNote.value,
     date: new Date(),
@@ -16,6 +26,7 @@ const addNotes = () => {
   });
   newNote.value = "";
   showModal.value = false;
+  errorMessage.value = null;
 };
 </script>
 <template>
@@ -23,12 +34,15 @@ const addNotes = () => {
     <div class="overlay" v-if="showModal">
       <div class="modal">
         <textarea
-          v-model="newNote"
+          v-model.trim="newNote"
           name="note"
           id="note"
           cols="30"
           rows="10"
         ></textarea>
+        <div style="color: red">
+          {{ errorMessage }}
+        </div>
         <button @click="addNotes">Add Note</button>
         <button class="close" @click="showModal = false">Close</button>
       </div>
@@ -48,7 +62,9 @@ const addNotes = () => {
           <p class="main-text">
             {{ note.text }}
           </p>
-          <p class="date">31/10/2023</p>
+          <p class="date">
+            {{ note.date.toLocaleDateString("de-DE", options) }}
+          </p>
         </div>
       </div>
     </div>

@@ -1,6 +1,6 @@
 # NotesApp
 
-This template should help get you started developing with Vue 3 in Vite.
+This application is developed in Vue3 and the user can add notes to the application.
 
 ## Recommended IDE Setup
 
